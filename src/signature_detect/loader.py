@@ -1,8 +1,8 @@
-from typing import Any
-
+import os
 import cv2
 import numpy as np
-import os
+
+from typing import Any
 from wand.image import Image
 
 

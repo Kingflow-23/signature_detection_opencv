@@ -1,7 +1,8 @@
+import numpy as np
+
 from typing import Any
 from skimage import measure, morphology
 from skimage.measure import regionprops
-import numpy as np
 
 
 class Extractor:
