@@ -28,7 +28,7 @@ class Loader:
             self.low_threshold = low_threshold
         if self._is_valid(high_threshold):
             self.high_threshold = high_threshold
-    
+
     def __str__(self) -> str:
         s = "\nLoader\n==========\n"
         s += "low_threshold = {}\n".format(self.low_threshold)
@@ -62,8 +62,8 @@ class Loader:
 
         if self.document_type == "PDF":
             pass
-            #loader = _PdfWorker(self.low_threshold, self.high_threshold)
-            #return loader.get_pdf_masks(path)
+            # loader = _PdfWorker(self.low_threshold, self.high_threshold)
+            # return loader.get_pdf_masks(path)
 
 
 class _ImageWorker:

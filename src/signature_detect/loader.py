@@ -29,7 +29,7 @@ class Loader:
             self.low_threshold = low_threshold
         if self._is_valid(high_threshold):
             self.high_threshold = high_threshold
-    
+
     def __str__(self) -> str:
         s = "\nLoader\n==========\n"
         s += "low_threshold = {}\n".format(self.low_threshold)
@@ -97,12 +97,12 @@ class _ImageWorker:
 class _PdfWorker(_ImageWorker):
     def __init__(self, low_threshold, high_threshold):
         super().__init__(low_threshold, high_threshold)
-    
+
     def get_pdf_images(self, path: str) -> list:
         imgs = []
-        with(Image(filename=path,resolution=200)) as source:
-            images=source.sequence
-            pages=len(images)
+        with Image(filename=path, resolution=200) as source:
+            images = source.sequence
+            pages = len(images)
             for i in range(pages):
                 imgs.append(images[i])
         return imgs

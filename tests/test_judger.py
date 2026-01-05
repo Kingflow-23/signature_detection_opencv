@@ -12,6 +12,7 @@ from signature_detect.judger import Judger
 
 from tests.data.dummy import TEST_IMAGE_PATH
 
+
 class TestJudger(unittest.TestCase):
     def test_init(self):
         judger = Judger()
@@ -30,7 +31,7 @@ class TestJudger(unittest.TestCase):
     def test_is_valid_mask(self):
         judger = Judger()
 
-        mask = np.array([[0,0,0,0]])
+        mask = np.array([[0, 0, 0, 0]])
         res = judger.judge(mask)
         self.assertFalse(res)
 
@@ -43,11 +44,11 @@ class TestJudger(unittest.TestCase):
         mask = np.array([0, 255])
         res = judger._is_valid_mask(mask)
         self.assertTrue(res)
-    
+
     def test_judge(self):
         judger = Judger()
 
-        mask = np.array([[255,0,0,0,0]])
+        mask = np.array([[255, 0, 0, 0, 0]])
         res = judger.judge(mask)
         self.assertFalse(res)
 
@@ -58,7 +59,7 @@ class TestJudger(unittest.TestCase):
         mask = np.array([[255, 255, 255], [0, 255, 255]])
         res = judger.judge(mask)
         self.assertTrue(res)
-    
+
     def test_run(self):
         path = TEST_IMAGE_PATH
 
@@ -73,7 +74,7 @@ class TestJudger(unittest.TestCase):
 
         judger = Judger()
         regions = judger.run(results)
-        
+
         # assert
         region = regions[0]
         self.assertEqual(region["id"], 0)
