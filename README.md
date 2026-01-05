@@ -1,4 +1,4 @@
-Work based on [Signature Detection](https://github.com/EnzoSeason/signature_detection)
+Whole Work based on [Signature Detection](https://github.com/EnzoSeason/signature_detection)
 
 # Signature Detection
 
