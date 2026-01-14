@@ -105,11 +105,12 @@ class Extractor:
 
             # remove small pixels
             labeled_image = morphology.remove_small_objects(labels, small_size_outlier)
+
             # remove the big pixels
             component_sizes = np.bincount(labeled_image.ravel())
-            too_small = component_sizes > (big_size_outlier)
-            too_small_mask = too_small[labeled_image]
-            labeled_image[too_small_mask] = 0
+            too_big = component_sizes > (big_size_outlier)
+            too_big_mask = too_big[labeled_image]
+            labeled_image[too_big_mask] = 0
 
             labeled_mask = np.where(labeled_image > 0, 255, 0).astype("uint8")
 
