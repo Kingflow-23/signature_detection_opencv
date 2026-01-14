@@ -1,9 +1,9 @@
 import os
 import cv2
+import fitz
 import numpy as np
 
 from typing import Any
-from wand.image import Image
 
 
 class Loader:
@@ -99,24 +99,45 @@ class _PdfWorker(_ImageWorker):
         super().__init__(low_threshold, high_threshold)
 
     def get_pdf_images(self, path: str) -> list:
+        """
+        Render each page of the PDF to an image (BGR for OpenCV) at ~200 DPI.
+        """
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"PDF file not found: {path}")
+
         imgs = []
-        with Image(filename=path, resolution=200) as source:
-            images = source.sequence
-            pages = len(images)
-            for i in range(pages):
-                imgs.append(images[i])
+        # 72 points = 1 inch -> zoom = dpi / 72
+        dpi = 200
+        zoom = dpi / 72.0
+        mat = fitz.Matrix(zoom, zoom)
+
+        try:
+            with fitz.open(path) as doc:
+                for page in doc:
+                    # Render RGB pixmap; alpha disabled
+                    pix = page.get_pixmap(
+                        matrix=mat, colorspace=fitz.csRGB, alpha=False
+                    )
+                    # Convert pix.samples (bytes) -> numpy array (H, W, 3) in RGB
+                    arr = np.frombuffer(pix.samples, dtype=np.uint8).reshape(
+                        pix.height, pix.width, 3
+                    )
+                    # Convert RGB -> BGR for OpenCV
+                    bgr = arr[:, :, ::-1].copy()
+                    imgs.append(bgr)
+        except Exception as e:
+            raise RuntimeError(f"Error while rendering PDF pages with PyMuPDF: {e}")
         return imgs
 
     def get_pdf_masks(self, path: str) -> list:
         """
-        create the mask that the bright parts are marked as 255, the rest as 0,
-        page by page
+        Create masks (bright parts in 255) page by page.
         """
         images = self.get_pdf_images(path)
-
         masks = []
-        for image in images:
-            np_image = np.array(image)
-            mask = self.make_mask(np_image)
+        for bgr in images:
+            mask = self.make_mask(
+                bgr
+            )  # make_mask expects BGR and converts to HSV internally
             masks.append(mask)
         return masks
